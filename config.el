@@ -155,7 +155,6 @@
 
 ;; Dap setup
 (require 'dap-cpptools)
-(require 'dap-cpptools)
 
 ;; Dap modes
 (dap-register-debug-template
