@@ -179,7 +179,7 @@
        :cwd (projectile-project-root)))
 
 ;; Mail setup
-(load "email.el")
+(load "lisp/email.el")
 
 ;; Improves performance if only using gmail
 (setq mu4e-index-cleanup nil
