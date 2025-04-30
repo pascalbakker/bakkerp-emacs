@@ -1,0 +1,10 @@
+# This is my Emacs Config!
+
+Things I added
+
+- nov.el - Reading epubs
+- mu4e - Reading/writing email
+- Java LSP with Eclipse.xml formatter
+- Mermaid org charts
+- Some hotkeys
+- Epic splash screen 
