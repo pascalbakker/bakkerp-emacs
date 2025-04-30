@@ -1,4 +1,4 @@
-# This is my Emacs Config!
+# This is my Doom Emacs Config!
 
 Things I added
 
