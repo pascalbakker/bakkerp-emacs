@@ -178,7 +178,7 @@
        :cwd (projectile-project-root)))
 
 ;; Mail setup
-(load "lisp/email.el")
+(load "~/.config/doom/lisp/email.el")
 
 ;; Improves performance if only using gmail
 (setq mu4e-index-cleanup nil
@@ -307,7 +307,8 @@
         (macro-value (read-string "Macro value: ")))
     (insert (format ":%s:\n#+MACRO: %s %s\n:END:" macro-name macro-name macro-value))))
 
-(define-key org-mode-map (kbd "C-c m") 'insert-macro-with-values)
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c m") #'insert-macro-with-values))
 
 ;; Projectile hotkeys
 (after! projectile
