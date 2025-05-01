@@ -141,6 +141,15 @@
 
 (setq org-directory "~/org/")
 
+;; pixel scrolling
+(pixel-scroll-precision-mode t)
+
+;; abbr
+(setq-default abbrev-mode t)
+
+;; Garbage collection threshold
+(setq gc-cons-threshold (* 100 1024 1024))
+
 ;; Centaur tabs
 (define-key evil-normal-state-map (kbd "g t") 'centaur-tabs-forward)
 (define-key evil-normal-state-map (kbd "g T") 'centaur-tabs-backward)
@@ -318,7 +327,7 @@
 ;; LSP settings
 
 ;; Set time until completion displays in seconds
-(setq lsp-idel-delay 0.1)
+(setq lsp-idle-delay 0.1)
 
 ;; Java LSP configurations
 
@@ -333,3 +342,22 @@
          lsp-java-format-settings-profile "DefaultProfile"
          lsp-java-completion-import-order ["" "javax" "java" "#"]))
  ]
+
+;; Helm
+
+;; Show input above search
+(setq helm-echo-input-in-header-line t)
+
+;; Have tilde expand
+(setq helm-ff-tilde-expansion t)
+
+;; vterm settings
+(setq vterm-timer-delay 0.01)
+
+;; treemacs settings
+
+;; allow 1 click for tree
+(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+
+;; Allow drag changing width of treemacs
+(setq treemacs--width-is-locked nil)
