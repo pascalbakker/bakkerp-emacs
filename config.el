@@ -361,3 +361,11 @@
 
 ;; Allow drag changing width of treemacs
 (setq treemacs--width-is-locked nil)
+
+;; Vertico posframe
+(load "~/.config/doom/lisp/vertico-posframe.el")
+(vertico-posframe-mode 1)
+
+;; Consult live preview
+(setq consult-preview-enable t)
+(setq vertico-posframe-height 50)
