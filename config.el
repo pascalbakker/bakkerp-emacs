@@ -298,7 +298,6 @@
 (setq treemacs--width-is-locked nil)
 
 ;; Vertico posframe
-(load "~/.config/doom/lisp/vertico-posframe.el")
 (vertico-posframe-mode 1)
 
 ;; Consult live preview
