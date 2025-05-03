@@ -139,6 +139,7 @@
 
 ;; Epub
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq nov-continuous-scroll t)
 (setq nov-text-width 100)  ;; Set text width to 100 characters (adjust as needed)
 (setq visual-fill-column-center-text t)  ;; Enable centering of text
 
@@ -299,7 +300,30 @@
 
 ;; Vertico posframe
 (vertico-posframe-mode 1)
+(setq vertico-posframe-parameters
+      '((left-fringe . 20)
+        (right-fringe . 8)))
+
 
 ;; Consult live preview
 (setq consult-preview-enable t)
 (setq vertico-posframe-height 50)
+
+;; Winner mode
+(setq winner-mode 1)
+
+(defvar fullscreen-mode nil
+  "Toggle fullscreen mode")
+
+(defun toggle-full-screen ()
+  (interactive)
+  (if fullscreen-mode
+      (progn
+        (setq fullscreen-mode nil)
+        (winner-undo))
+    (progn
+      (setq fullscreen-mode t)
+      (delete-other-windows))))
+
+(map! :leader
+      "f" #'toggle-full-screen)
