@@ -137,17 +137,7 @@
 	message-sendmail-extra-arguments '("--read-envelope-from")
 	message-send-mail-function #'message-send-mail-with-sendmail))
 
-;; Epub
-(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-(setq nov-continuous-scroll t)
-(setq nov-text-width 100)  ;; Set text width to 100 characters (adjust as needed)
-(setq visual-fill-column-center-text t)  ;; Enable centering of text
-
-(add-hook 'nov-mode-hook
-          (lambda ()
-            (visual-line-mode 1)  ;; Enable visual line mode for wrapping text
-            (visual-fill-column-mode 1)))  ;; Enable visual-fill-column mode to center text
-
+;; Center text modes
 (defun center-text ()
   "Center the text in the middle of the buffer. Works best in full screen."
   (interactive)
@@ -163,22 +153,6 @@
    (car (get-buffer-window-list (current-buffer) nil t))
    nil
    nil))
-
-(setq centered nil)
-
-(defun center-text-mode ()
-  "Toggle centering of text in the buffer."
-  (interactive)
-  (if centered
-      (progn
-        (center-text-clear)
-        (setq centered nil))
-    (progn
-      (center-text)
-      (setq centered t))))
-
-(define-key global-map (kbd "C-c M-t") 'center-text-mode)
-
 
 ;; Popup
 (after! dired
@@ -259,7 +233,6 @@
 (after! projectile
   (add-to-list 'projectile-project-root-files "Config"))
 
-
 ;; LSP settings
 
 ;; Set time until completion displays in seconds
@@ -278,14 +251,6 @@
          lsp-java-format-settings-profile "DefaultProfile"
          lsp-java-completion-import-order ["" "javax" "java" "#"]))
  ]
-
-;; Helm
-
-;; Show input above search
-(setq helm-echo-input-in-header-line t)
-
-;; Have tilde expand
-(setq helm-ff-tilde-expansion t)
 
 ;; vterm settings
 (setq vterm-timer-delay 0.01)
@@ -327,3 +292,17 @@
 
 (map! :leader
       "f" #'toggle-full-screen)
+
+;; Epub Nav.el
+(setq nov-continuous-scroll t)
+(setq nov-unzip-program (executable-find "bsdtar")
+      nov-unzip-args '("-xC" directory "-f" filename))
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
+(defun my/nov-reader-mode ()
+  "Minimal reader-mode for nov.el with centered text and Alegreya font."
+  (face-remap-add-relative 'default :family "Alegreya" :height 180)
+  ;; Add line spacing for readability
+  (setq-local line-spacing 0.2))
+
+(add-hook 'nov-mode-hook 'my/nov-reader-mode)

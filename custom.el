@@ -13,6 +13,7 @@
      "34cf3305b35e3a8132a0b1bdf2c67623bc2cb05b125f8d7d26bd51fd16d547ec"
      "4ade6b630ba8cbab10703b27fd05bb43aaf8a3e5ba8c2dc1ea4a2de5f8d45882"
      "30d174000ea9cbddecd6cc695943afb7dba66b302a14f9db5dd65074e70cc744" default))
+ '(package-selected-packages '(mu4easy))
  '(safe-local-variable-values '((dap-auto-configure-features sessions locals))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
