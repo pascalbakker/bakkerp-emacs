@@ -49,3 +49,4 @@
 ;; (unpin! t)
 (package! nov)
 (package! vertico-posframe)
+(package! gdscript-mode)

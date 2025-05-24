@@ -155,13 +155,7 @@
    nil))
 
 ;; Popup
-(after! dired
-  (set-popup-rule! "^\\*Dired"
-    :side 'center
-    :size 0.6
-    :vslot 2
-    :select t
-    :quit t))
+;; Centered floating window
 
 ;; Mermaid
 ;; For MacOS
@@ -265,14 +259,10 @@
 
 ;; Vertico posframe
 (vertico-posframe-mode 1)
-(setq vertico-posframe-parameters
-      '((left-fringe . 20)
-        (right-fringe . 8)))
-
+(setq vertico-count 50)
 
 ;; Consult live preview
 (setq consult-preview-enable t)
-(setq vertico-posframe-height 50)
 
 ;; Winner mode
 (setq winner-mode 1)
@@ -318,3 +308,8 @@
   (let ((key (format "M-%d" (1+ i))) ; M-1 to M-9 and M-10 (which is M-0)
         (fn  (intern (format "+workspace/switch-to-%d" i))))
     (evil-define-key 'normal vterm-mode-map (kbd key) fn)))
+
+;; Godot
+(use-package! gdscript-mode
+  :mode "\\.gd\\'"
+  :hook (gdscript-mode . eglot-ensure))
