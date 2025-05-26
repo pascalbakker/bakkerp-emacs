@@ -331,8 +331,8 @@
   (emms-all)
   (emms-default-players)
   (emms-mpris-enable)
-  :custom
-  (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+  ;;:custom
+  ;;(emms-browser-covers #'emms-browser-cache-thumbnail-async)
   :bind
   (("C-c w m b" . emms-browser)
    ("C-c w m e" . emms)
@@ -348,45 +348,33 @@
 ;; Persist music across sessions
 (require 'emms-history)
 
-;; EMMS layout
 (defun my/emms-custom ()
-  "Set up EMMS layout with:
-- EMMS playlist on top-left
-- *EMMS Overview* on bottom-left
-- emms-browser on the right"
   (interactive)
-  ;; Start clean
   (delete-other-windows)
 
-  ;; Left: split into top (playlist) and bottom (overview)
   (let* ((left (selected-window))
          (right (split-window left nil 'right))
-         (overview (split-window left 'below))
-         (controls (split-window left  5 'below))) ; bottom-left small
+         (left-top left)
+         (left-bottom (split-window left-top (- (window-height) 20) 'below)))
 
     ;; Left top: Playlist
-    (with-selected-window left
-      (emms))  ;; opens the EMMS playlist buffer
+    (with-selected-window left-top
+      (emms)) ;; opens EMMS playlist
 
-    ;; Left bottom: *EMMS Overview*
-    (with-selected-window overview
-      (switch-to-buffer "*EMMS Overview*")
-      (unless (get-buffer "*EMMS Overview*")
-        (with-current-buffer (get-buffer-create "*EMMS Overview*")
-          (insert "EMMS Overview.\n"))))
+    ;; Left bottom: Overview
+    (with-selected-window left-bottom
+      (let ((buf (get-buffer "*EMMS Overview*")))
+        (if buf
+            (switch-to-buffer buf)
+          (switch-to-buffer (get-buffer-create "*EMMS Overview*"))
+          (insert "EMMS Overview Window.\n Add a song to display information")
+          (center-text))))
 
-    ;; set controls
-    (with-selected-window controls
-      (switch-to-buffer "*EMMS Controls*")
-      (create-controls)
-      )
-
-    ;; Right: EMMS Browser
+    ;; Right: Browser
     (with-selected-window right
       (emms-browser))))
 
 
-;; Emms show album art at top
 
 ;; EMMS new line hook
 (defun my-emms-ensure-newline-at-top ()
@@ -413,7 +401,6 @@
           (lambda ()
             (read-only-mode 0)
             (display-cover-art)
-            (center-text)
             (read-only-mode 1)))
 
 (defun create-controls ()
@@ -424,8 +411,8 @@
           (inhibit-modification-hooks t)
           (inhibit-point-motion-hooks t)
           (inhibit-modification-hooks t)
+          (redisplay-dont-pause t)
           (inhibit-redisplay t))
-      (erase-buffer)
       (setq mode-line-format nil)
       (insert-button " ⏸ "
                      'action (lambda (_) (emms-pause))
@@ -433,12 +420,12 @@
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
       (insert-button " ⏪ "
-                     'action (lambda (_) (emms-seek-backward -10))
+                     'action (lambda (_) (emms-seek-backward))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
       (insert-button " ⏩ "
-                     'action (lambda (_) (emms-seek-forward 10))
+                     'action (lambda (_) (emms-seek-forward))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
@@ -451,23 +438,28 @@
                      'action (lambda (_) (emms-next))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
+      (insert-button " Clear "
+                     'action (lambda (_) (emms-playlist-clear))
+                     'follow-link t
+                     'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (read-only-mode 1)
       (redisplay)
       (center-text))))
+(defvar my/emms-last-song nil)
 
 (defun display-cover-art ()
-  (interactive)
-  (let ((current-song-full-path (find-file-name-from-current-song)))
-    (if (not current-song-full-path)
-        (message "No track to display")
-      (progn
+  (let ((current (find-file-name-from-current-song)))
+    (unless (equal current my/emms-last-song)
+      (setq my/emms-last-song current)
+      (when current
         (with-current-buffer "*EMMS Overview*"
-          (erase-buffer)
-          (remove-images 0 2 "*EMMS Overview*")
-          (set-album-art-from-filepath current-song-full-path)
-          (goto-char 3)
-          (insert (create-info-table)))
-        ))))
+          (let ((inhibit-read-only t))
+            (erase-buffer)
+            (setq mode-line-format nil)
+            (remove-images 0 2 "*EMMS Overview*")
+            (set-album-art-from-filepath current)
+            (goto-char 3)
+            (insert (create-info-table))))))))
 
 (defun get-file-extension-from-filepath (file-path)
   (let* ((ext (file-name-extension file-path))  ;; ext is a string like "jpg"
@@ -494,26 +486,25 @@
 (defun find-file-name-from-current-song ()
   (cdr (assoc 'name (emms-playlist-current-selected-track))))
 
+(defvar my/cover-art-cache (make-hash-table :test 'equal))
+
 (defun find-first-cover-or-image (directory)
-  "Return the first 'cover.jpg' or 'cover.png' (case-insensitive) in DIRECTORY.
-If none found, return the first image file (jpg, jpeg, png, gif, bmp) found.
-Returns full path or nil if no image found."
-  (when directory
-    (when (file-directory-p directory)
+  (or (gethash directory my/cover-art-cache)
       (let ((case-fold-search t)
             (files (directory-files directory t ".*")))
-        ;; Try to find cover.jpg or cover.png first
-        (or (seq-find (lambda (f)
-                        (string-match-p
-                         "\\`cover\\.\\(jpg\\|jpeg\\|png\\)\\'"
-                         (file-name-nondirectory f)))
-                      files)
-            ;; If none, find first image file with common extensions
-            (seq-find (lambda (f)
-                        (string-match-p
-                         "\\`.*\\.\\(jpg\\|jpeg\\|png\\|gif\\|bmp\\)\\'"
-                         (file-name-nondirectory f)))
-                      files))))))
+        (let ((result (or
+                       (seq-find (lambda (f)
+                                   (string-match-p
+                                    "\\`cover\\.\\(jpg\\|jpeg\\|png\\)\\'"
+                                    (file-name-nondirectory f)))
+                                 files)
+                       (seq-find (lambda (f)
+                                   (string-match-p
+                                    "\\`.*\\.\\(jpg\\|jpeg\\|png\\|gif\\|bmp\\)\\'"
+                                    (file-name-nondirectory f)))
+                                 files))))
+          (puthash directory result my/cover-art-cache)
+          result))))
 
 (defun find-title-from-current-song ()
   (cdr (assoc 'info-title (emms-playlist-current-selected-track))))
