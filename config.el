@@ -74,8 +74,6 @@
 
 (setq display-line-numbers-type t)
 
-(setq org-directory "~/org/")
-
 ;; pixel scrolling
 (pixel-scroll-precision-mode t)
 
@@ -257,9 +255,14 @@
 ;; Allow drag changing width of treemacs
 (setq treemacs--width-is-locked nil)
 
-;; Vertico posframe
+;; Vertico popup frame
 (vertico-posframe-mode 1)
 (setq vertico-count 50)
+
+;; Set vertico fringes
+(setq vertico-posframe-parameters
+      '((left-fringe . 20)
+        (right-fringe . 8)))
 
 ;; Consult live preview
 (setq consult-preview-enable t)
@@ -313,3 +316,6 @@
 (use-package! gdscript-mode
   :mode "\\.gd\\'"
   :hook (gdscript-mode . eglot-ensure))
+
+;; Projectile
+(setq projectile-project-search-path '("~/projects/" "~/dev/" "~/code/"))
