@@ -373,7 +373,7 @@
       (switch-to-buffer "*EMMS Overview*")
       (unless (get-buffer "*EMMS Overview*")
         (with-current-buffer (get-buffer-create "*EMMS Overview*")
-          (insert "EMMS Overview goes here.\n"))))
+          (insert "EMMS Overview.\n"))))
 
     ;; set controls
     (with-selected-window controls
@@ -413,6 +413,7 @@
           (lambda ()
             (read-only-mode 0)
             (display-cover-art)
+            (center-text)
             (read-only-mode 1)))
 
 (defun create-controls ()
@@ -432,12 +433,12 @@
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
       (insert-button " ⏪ "
-                     'action (lambda (_) (emms-seek-to -10))
+                     'action (lambda (_) (emms-seek-backward -10))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
       (insert-button " ⏩ "
-                     'action (lambda (_) (emms-seek-to 10))
+                     'action (lambda (_) (emms-seek-forward 10))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (insert "  ")
@@ -452,7 +453,7 @@
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
       (read-only-mode 1)
       (redisplay)
-      )))
+      (center-text))))
 
 (defun display-cover-art ()
   (interactive)
@@ -551,10 +552,53 @@ Returns full path or nil if no image found."
   (let* ((total-playing-time (emms-track-get
                               (emms-playlist-current-selected-track)
                               'info-playing-time))
-         (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+         (elapsed/total (round (/ (* 100 emms-playing-time) total-playing-time))))
     (with-temp-message (format "[%-100s] %2d%%"
                                (make-string elapsed/total ?=)
                                elapsed/total)
       (sit-for 2))))
 
 (add-hook 'emms-player-seeked-functions #'chunyang-emms-indicate-seek 'append)
+
+;; EMMS Youtube
+(add-to-list 'emms-player-list 'emms-player-mpv t)
+(emms-player-set emms-player-mpd
+                 'regex
+                 (emms-player-simple-regexp
+                  "m3u" "ogg" "flac" "mp3" "wav" "mod" "au" "aiff"))
+
+(emms-player-set emms-player-mpv
+                 'regex
+                 (rx (or (: "https://" (* nonl) "youtube.com" (* nonl))
+                         (+ (? (or "https://" "http://"))
+                            (* nonl)
+                            (regexp (eval (emms-player-simple-regexp
+                                           "mp4" "mov" "wmv" "webm" "flv" "avi" "mkv")))))))
+
+(setq my/youtube-dl-quality-list
+      '("bestvideo[height<=720]+bestaudio/best[height<=720]"
+        "bestvideo[height<=480]+bestaudio/best[height<=480]"
+        "bestvideo[height<=1080]+bestaudio/best[height<=1080]"))
+
+(setq my/default-emms-player-mpv-parameters
+      '("--quiet" "--really-quiet" "--no-audio-display"))
+
+(defun my/set-emms-mpd-youtube-quality (quality)
+  (interactive "P")
+  (unless quality
+    (setq quality (completing-read "Quality: " my/youtube-dl-quality-list nil t)))
+  (setq emms-player-mpv-parameters
+        `(,@my/default-emms-player-mpv-parameters ,(format "--ytdl-format=%s" quality))))
+
+(my/set-emms-mpd-youtube-quality (car my/youtube-dl-quality-list))
+
+(defun my/emms-cleanup-urls ()
+  (interactive)
+  (let ((keys-to-delete '()))
+    (maphash (lambda (key value)
+               (when (eq (cdr (assoc 'type value)) 'url)
+                 (add-to-list 'keys-to-delete key)))
+             emms-cache-db)
+    (dolist (key keys-to-delete)
+      (remhash key emms-cache-db)))
+  (setq emms-cache-dirty t))
