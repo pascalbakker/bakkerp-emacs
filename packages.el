@@ -50,3 +50,8 @@
 (package! nov)
 (package! vertico-posframe)
 (package! gdscript-mode)
+(package! ready-player)
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))

@@ -106,3 +106,49 @@
   (add-to-list 'projectile-project-root-files "Config"))
 
 (setq projectile-project-search-path '("~/projects/" "~/dev/" "~/code/"))
+
+;; Set scheme to csi
+(setq scheme-program-name "csi")
+
+;; Adds script header
+(defun is-new-file-and-matches-extension (extension)
+  (and (buffer-file-name)
+       (string-match-p (format "\\.%s\\'" extension) (buffer-file-name))
+       (not (file-exists-p (buffer-file-name)))
+       (= (point-min) (point-max))))
+
+(defun map-script-header-to-text ()
+  (cond
+   ((is-new-file-and-matches-extension "scm")
+    (insert "#!/usr/local/bin/csi -s\n"))
+   ((is-new-file-and-matches-extension "el")
+    (insert ";;;%s" (file-name)))))
+
+(add-hook 'find-file-hook #'map-script-header-to-text)
+
+;; Guile compile
+(defun my-set-guile-compile-command ()
+  "Set `compile-command` to run Guile on the current buffer file."
+  (when (and buffer-file-name
+             (string-match-p "\\.scm\\'" buffer-file-name))
+    (set (make-local-variable 'compile-command)
+         (format "guile %s" (shell-quote-argument buffer-file-name)))))
+
+;;(add-hook 'scheme-mode-hook #'my-set-guile-compile-command)
+
+(defun compile-guile ()
+  (interactive)
+  (let ((buffer-name buffer-file-name))
+    ;;(split-window-below )
+    (async-shell-command
+     (format "guile %s" (shell-quote-argument buffer-file-name))
+     "*Guile Output*")
+    )
+  )
+
+(map! :leader "c z" #'compile-guile)
+
+(defun kill-guile ()
+  (interactive)
+  (kill-buffer "*Guile Output*")
+  )
