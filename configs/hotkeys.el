@@ -30,7 +30,3 @@
 
 (map! :leader
       "f" #'toggle-full-screen)
-
-;; Centaur tabs
-(define-key evil-normal-state-map (kbd "g t") 'centaur-tabs-forward)
-(define-key evil-normal-state-map (kbd "g T") 'centaur-tabs-backward)

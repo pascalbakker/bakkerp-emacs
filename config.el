@@ -21,6 +21,9 @@
 (load "~/.config/doom/configs/org.el")
 (load "~/.config/doom/configs/lsp.el")
 
+(when (package-installed-p 'evil)
+  (load "~/.config/doom/configs/evil.el"))
+
 ;; General settings
 
 (setq display-line-numbers-type t)
