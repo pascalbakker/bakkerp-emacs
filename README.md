@@ -1,6 +1,5 @@
 # This is my Doom Emacs Config!
 
-
 Things I added
 
 - nov.el - Reading epubs

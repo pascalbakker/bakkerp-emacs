@@ -236,7 +236,7 @@
   (directory-files "~/scripts/" nil directory-files-no-dot-files-regexp))
 
 (defun run-scripts ()
+  "Creates a menu of different scripts to execute"
   (interactive)
-  (let (
-        (choice (completing-read "Choose script:" (get-lists-of-scripts))))
-    (async-shell-command (format "sh ~/scripts/%s" choice))))
+  (let ((choice (completing-read "Choose script:" (get-lists-of-scripts))))
+    (async-shell-command (format "sh ~/scripts/%s" choice) "*Shell Output*")))
