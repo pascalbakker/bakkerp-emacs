@@ -203,3 +203,40 @@
         (kill-buffer buf)))))
 
 (setq dired-mouse-drag-files t)
+
+
+;;  Dired RET custom
+(defun my/dired-open-file ()
+  "Custom open action for files in Dired based on file extension."
+  (interactive)
+  (let* ((file (dired-get-file-for-visit))
+         (ext (file-name-extension file t))) ; include the dot
+    (cond
+     ;; Open video/audio files with mpv
+     ((member ext '(".mp4" ".mkv" ".webm" ".mp3" ".wav" ".flac"))
+      (start-process "mpv" nil "mpv" file))
+
+     ;; Open images with feh
+     ((member ext '(".jpg" ".jpeg" ".png" ".gif"))
+      (start-process "feh" nil "feh" file))
+
+     ;; Open PDFs with zathura
+     ((string= ext ".pdf")
+      (start-process "zathura" nil "zathura" file))
+
+     ;; Default: open in Emacs
+     (t (find-file file)))))
+
+;; Replace RET behavior in Dired
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (local-set-key (kbd "RET") #'my/dired-open-file)))
+
+(defun get-lists-of-scripts ()
+  (directory-files "~/scripts/" nil directory-files-no-dot-files-regexp))
+
+(defun run-scripts ()
+  (interactive)
+  (let (
+        (choice (completing-read "Choose script:" (get-lists-of-scripts))))
+    (async-shell-command (format "sh ~/scripts/%s" choice))))
