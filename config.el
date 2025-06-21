@@ -155,3 +155,18 @@
   (interactive)
   (kill-buffer "*Guile Output*")
   )
+
+(defun copy-lines (n)
+  "Copies n number of lines past cursor including current line"
+  (interactive "p")
+  (beginning-of-line)
+  (set-mark (point))
+  (dotimes (_ n)
+    (forward-line))
+  (end-of-line 1)
+  (kill-ring-save (mark) (point)))
+
+;; (defalias 'copy-line
+;;   (kmacro "C-a C-SPC C-e M-w C-n"))
+
+(global-set-key (kbd "C-c y y") 'copy-lines)
