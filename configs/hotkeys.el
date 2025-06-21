@@ -1,16 +1,6 @@
 ;;; hotkeys.el -*- lexical-binding: t; -*-
 
 ;; Hotkeys
-;; Workspace
-(defun hotkey-next-workspace ()
-  (global-set-key (kbd "M-}") '+workspace:switch-next))
-
-(defun hotkey-previous-workspace ()
-  (global-set-key (kbd "M-{") '+workspace:switch-previous))
-
-(hotkey-next-workspace)
-(hotkey-previous-workspace)
-
 ;; Formatting hotkeys
 (map! :v "SPC f r" #'+format/region)
 
