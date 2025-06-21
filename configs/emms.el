@@ -50,8 +50,6 @@
     (with-selected-window right
       (emms-browser))))
 
-
-
 ;; EMMS new line hook
 (defun my-emms-ensure-newline-at-top ()
   "Ensure `*EMMS Playlist*` buffer always has a blank line at the top."
@@ -281,7 +279,6 @@
       (file-name--extension file)))
    (directory-files playlists)))
 
-
 (defun my-popup-menu-example ()
   (interactive)
   (let ((choice (completing-read "Choose action: " '("Say Hello" "Insert Date" "Open Init"))))
@@ -295,18 +292,5 @@
 
 (defun create-functions-for-comparison (list-of-items))
 
-
 ;; EMMS mark mode
 (setq emms-playlist-default-major-mode 'emms-mark-mode)
-
-;;(add-hook
-;; 'emms-playlist-mode
-;; '(lambda ()
-;;    (global-set-key (kbd "C-1") #'my-function)
-;;
-;;    ))
-
-;; Emms
-;;(setq emms-browser-covers #'emms-browser-cache-thumbnail-async)
-;;(setq emms-browser-thumbnail-small-size 64)
-;;(setq emms-browser-thumbnail-medium-size 128)

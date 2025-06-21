@@ -16,7 +16,6 @@
 ;; Xwiki conversion for org mode
 ;;(load! "ox-xwiki.el" "~/.config/doom/lisp")
 
-
 ;; Macro expanders for org mode
 (defun insert-org-macro ()
   (interactive)

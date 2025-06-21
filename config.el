@@ -145,16 +145,13 @@
     ;;(split-window-below )
     (async-shell-command
      (format "guile %s" (shell-quote-argument buffer-file-name))
-     "*Guile Output*")
-    )
-  )
+     "*Guile Output*")))
 
 (map! :leader "c z" #'compile-guile)
 
 (defun kill-guile ()
   (interactive)
-  (kill-buffer "*Guile Output*")
-  )
+  (kill-buffer "*Guile Output*"))
 
 (defun copy-lines (n)
   "Copies n number of lines past cursor including current line"
@@ -166,7 +163,43 @@
   (end-of-line 1)
   (kill-ring-save (mark) (point)))
 
-;; (defalias 'copy-line
-;;   (kmacro "C-a C-SPC C-e M-w C-n"))
-
 (global-set-key (kbd "C-c y y") 'copy-lines)
+
+;; Sets (kbd "M-[0-9]") +workspace/switch-to-[0-9]
+;; (dotimes (i 10)
+;;   (let ((key (format "C-c %d" i))
+;;         (fn  (intern (format "+workspace/switch-to-%d" i))))
+;;     (global-set-key (kbd key) fn)))
+
+(defun dired-unrar-into-folder ()
+  "Extract selected .rar file into a folder named after it."
+  (interactive)
+  (let* ((file (dired-get-file-for-visit))
+         (basename (file-name-sans-extension (file-name-nondirectory file)))
+         (target-dir (expand-file-name basename (file-name-directory file)))
+         (cmd (format "mkdir -p \"%s\" && unrar x \"%s\" \"%s/\"" target-dir file target-dir)))
+    (async-shell-command cmd)))
+
+(defun dired-open-in-feh ()
+  "Opens selected file in feh"
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (async-shell-command (format "feh -Z %s" file))))
+
+(defun kill-all-image-buffers ()
+  "Kill all buffers in `image-mode`."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (eq major-mode 'image-mode)
+        (kill-buffer buf)))))
+
+(defun kill-all-epub-buffers ()
+  "Kill all buffers in `image-mode`."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (eq major-mode 'nov-mode)
+        (kill-buffer buf)))))
+
+(setq dired-mouse-drag-files t)
