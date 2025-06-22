@@ -204,7 +204,6 @@
 
 (setq dired-mouse-drag-files t)
 
-
 ;;  Dired RET custom
 (defun my/dired-open-file ()
   "Custom open action for files in Dired based on file extension."
@@ -238,5 +237,12 @@
 (defun run-scripts ()
   "Creates a menu of different scripts to execute"
   (interactive)
-  (let ((choice (completing-read "Choose script:" (get-lists-of-scripts))))
+  (let ((choice (completing-read "Choose script: " (get-lists-of-scripts))))
     (async-shell-command (format "sh ~/scripts/%s" choice) "*Shell Output*")))
+
+(global-set-key (kbd "C-c C-r") #'run-scripts)
+
+;;  Pacman commands
+(defun pacman-sync ()
+  (interactive)
+  (async-shell-command "sudo pacman -Syu" "*Pacman*"))
