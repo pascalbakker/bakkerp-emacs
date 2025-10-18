@@ -112,6 +112,7 @@
                      'action (lambda (_) (emms-next))
                      'follow-link t
                      'face '(:box t :background "gray20" :foreground "white" :weight bold :height 2.0))
+      (insert "  ")
       (insert-button " Clear "
                      'action (lambda (_) (emms-playlist-clear))
                      'follow-link t

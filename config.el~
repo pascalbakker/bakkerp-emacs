@@ -11,16 +11,15 @@
 ;; - `map!' for binding new keys
 
 ;; Load other configs
-;; (load "~/.config/doom/configs/logo.el")
+(load "~/.config/doom/configs/logo.el")
 (load "~/.config/doom/configs/emms.el")
 ;;(load "~/.config/doom/configs/email.el")
-(load "~/.config/doom/configs/mail.el")
+;;(load "~/.config/doom/configs/mail.el")
 (load "~/.config/doom/configs/hotkeys.el")
 (load "~/.config/doom/configs/vterm.el")
 (load "~/.config/doom/configs/epub.el")
 (load "~/.config/doom/configs/org.el")
 (load "~/.config/doom/configs/lsp.el")
-(load "~/.config/doom/configs/treesitter.el")
 
 ;;(when (package-installed-p 'evil)
 ;;  (load "~/.config/doom/configs/evil.el"))
@@ -49,13 +48,13 @@
 ;; Garbage collection threshold
 (setq gc-cons-threshold (* 100 1024 1024))
 
-(defun center-text ():
-       "Center the text in the middle of the buffer. Works best in full screen."
-       (interactive)
-       (set-window-margins
-        (car (get-buffer-window-list (current-buffer) nil t))
-        (/ (window-width) 4)
-        (/ (window-width) 4)))
+(defun center-text ()
+  "Center the text in the middle of the buffer. Works best in full screen."
+  (interactive)
+  (set-window-margins
+   (car (get-buffer-window-list (current-buffer) nil t))
+   (/ (window-width) 4)
+   (/ (window-width) 4)))
 
 (defun center-text-clear ()
   "Clear the centering of the text."
@@ -229,8 +228,8 @@
 
 ;; Replace RET behavior in Dired
 (add-hook 'dired-mode-hook
-          (lambda ()))
-(local-set-key (kbd "o") #'my/dired-open-file)))
+          (lambda ()
+            (local-set-key (kbd "o") #'my/dired-open-file)))
 
 (defun get-lists-of-scripts ()
   (directory-files "~/scripts/" nil directory-files-no-dot-files-regexp))
@@ -238,27 +237,7 @@
 (defun run-scripts ()
   "Creates a menu of different scripts to execute"
   (interactive)
-  let ((choice (completing-read "Choose script: " (get-lists-of-scripts)))
-       (async-shell-command (format "sudo sh ~/scripts/%s" choice) "*Shell Output*")))
+  (let ((choice (completing-read "Choose script: " (get-lists-of-scripts))))
+    (async-shell-command (format "sudo sh ~/scripts/%s" choice) "*Shell Output*")))
 
 (global-set-key (kbd "C-c C-r") #'run-scripts)
-
-(defun my-set-compile-command-for-sh ()
-  "Set compile command to `bash FILE_NAME.sh` if buffer is a shell script."
-  (when (and buffer-file-name
-             (string= (file-name-extension buffer-file-name) "sh"))
-    (set (make-local-variable 'compile-command)
-         (format "bash %s" (shell-quote-argument buffer-file-name)))))
-
-(add-hook 'sh-mode-hook 'my-set-compile-command-for-sh)
-
-(global-set-key (kbd "M-RET") 'dired-display-file)
-(define-key dired-mode-map (kbd "M-<return>") #'dired-display-file)
-
-(after! lsp-ui
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-show-with-cursor t
-        lsp-ui-doc-show-with-mouse t))
-
-(map! :leader
-      :desc "Describe symbol at point" "c h" #'lsp-describe-thing-at-point)
