@@ -38,3 +38,9 @@
 
 ;; Compiles Guile project
 (map! :leader "c z" #'compile-guile)
+
+(after! evil
+  (define-key evil-normal-state-map (kbd "g t") 'centaur-tabs-forward))
+
+(after! evil
+  (define-key evil-normal-state-map (kbd "g T") 'centaur-tabs-backward))
