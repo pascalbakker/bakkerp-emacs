@@ -1,6 +1,5 @@
 ;;; configs/scripts.el -*- lexical-binding: t; -*-
 
-
 ;; Adds script header
 (defun is-new-file-and-matches-extension (extension)
   (and (buffer-file-name)
