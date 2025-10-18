@@ -2,8 +2,8 @@
 
 Things I added
 
-- nov.el - Reading epubs
-- mu4e - Reading/writing email
+- treesitter config for better syntax highlighting
+- autocomplete for coding
 - Java LSP with Eclipse.xml formatter
 - Mermaid org charts
 - Some hotkeys
