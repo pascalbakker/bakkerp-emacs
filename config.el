@@ -230,7 +230,8 @@
 ;; Replace RET behavior in Dired
 (add-hook 'dired-mode-hook
           (lambda ()))
-(local-set-key (kbd "o") #'my/dired-open-file)))
+
+(local-set-key (kbd "o") #'my/dired-open-file)
 
 (defun get-lists-of-scripts ()
   (directory-files "~/scripts/" nil directory-files-no-dot-files-regexp))
@@ -262,3 +263,19 @@
 
 (map! :leader
       :desc "Describe symbol at point" "c h" #'lsp-describe-thing-at-point)
+
+(with-eval-after-load 'vterm
+  (define-key vterm-mode-map [mouse-2] #'vterm-yank))
+
+(defun my/vterm-paste ()
+  "Paste clipboard content into vterm using bracketed paste."
+  (interactive)
+  (let ((clip (current-kill 0))) ;; get system clipboard
+    ;; bracketed paste start
+    (vterm-send-string "\e[200~")
+    (vterm-send-string clip)
+    ;; bracketed paste end
+    (vterm-send-string "\e[201~")))
+
+(with-eval-after-load 'vterm
+  (define-key vterm-mode-map (kbd "C-S-v") #'my/vterm-paste))
