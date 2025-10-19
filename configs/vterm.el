@@ -17,3 +17,5 @@
 
 (with-eval-after-load 'vterm
   (define-key vterm-mode-map (kbd "C-S-v") #'my/vterm-paste))
+
+(setq vterm-shell "/bin/fish")

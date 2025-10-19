@@ -1,21 +1,25 @@
 ;;; emms.el -*- lexical-binding: t; -*-
-
 (use-package emms
-  :config
-  (require 'emms-setup)
-  (require 'emms-mpris)
-  (emms-all)
-  (emms-default-players)
-  (emms-mpris-enable)
-  ;;:custom
-  ;;(emms-browser-covers #'emms-browser-cache-thumbnail-async)
-  :bind
-  (("C-c w m b" . emms-browser)
-   ("C-c w m e" . emms)
-   ("C-c w m p" . emms-play-playlist )
-   ("<XF86AudioPrev>" . emms-previous)
-   ("<XF86AudioNext>" . emms-next)
-   ("<XF86AudioPlay>" . emms-pause)))
+  :defer t
+  :commands (emms emms-browser emms-play-playlist)
+  :bind (("C-c w m b" . emms-browser)
+         ("C-c w m e" . emms)
+         ("C-c w m p" . emms-play-playlist)
+         ("<XF86AudioPrev>" . emms-previous)
+         ("<XF86AudioNext>" . emms-next)
+         ("<XF86AudioPlay>" . emms-pause))
+  :init
+  (defun my/emms-init-once ()
+    "Initialize EMMS only when first used."
+    (unless (featurep 'emms-setup)
+      (require 'emms-setup)
+      (require 'emms-mpris)
+      (emms-all)
+      (emms-default-players)
+      (emms-mpris-enable)))
+  (advice-add 'emms :before #'my/emms-init-once)
+  (advice-add 'emms-browser :before #'my/emms-init-once)
+  (advice-add 'emms-play-playlist :before #'my/emms-init-once))
 
 (map! :leader
       :desc "EMMS Browse by Title"

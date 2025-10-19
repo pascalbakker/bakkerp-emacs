@@ -28,7 +28,9 @@
 
 ;; Dispaly files in dired
 (global-set-key (kbd "M-RET") 'dired-display-file)
-(define-key dired-mode-map (kbd "M-<return>") #'dired-display-file)
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "M-<return>") #'dired-display-file))
 
 ;; Shows popup of scripts to run in ~/scripts folder
 (global-set-key (kbd "C-c C-r") #'run-scripts)

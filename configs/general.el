@@ -8,7 +8,21 @@
 
 (setq doom-theme 'doom-one)
 
-(setq doom-font (font-spec :family "Iosevka" :weight 'regular :size 14))
+;;(add-to-list 'default-frame-alist '(font . "JetBrains Mono-13"))
+;;(set-face-attribute 'default nil :family "JetBrains Mono" :height 130)
+;;(set-face-attribute 'variable-pitch nil :family "JetBrains Mono" :height 1.0)
+;;(set-face-attribute 'fixed-pitch nil :family "JetBrains Mono" :height 1.0)
+
+(add-to-list 'default-frame-alist '(font . "Iosevka-13"))
+
+(set-face-attribute 'default nil :family "Iosevka" :height 130)
+(set-face-attribute 'variable-pitch nil :family "Iosevka" :height 1.0)
+(set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 1.0)
+
+(setq-default
+ frame-resize-pixelwise t
+ x-underline-at-descent-line t
+ inhibit-compacting-font-caches t)
 
 (setq display-line-numbers-type t)
 
