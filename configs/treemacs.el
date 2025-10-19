@@ -2,4 +2,5 @@
 
 ;; treemacs settings
 ;; allow 1 click for tree
-(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+(with-eval-after-load 'treemacs
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))

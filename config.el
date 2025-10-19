@@ -25,4 +25,5 @@
  "buffers.el"                           ; scripts for buffer management
  "scripts.el"                           ; run bash scripts functions
  "hotkeys.el"                           ; hotkeys for all scripts and doom
+ "dap.el"                               ; DAP configs
  )
