@@ -1,6 +1,7 @@
 # SMACS (My Personal Doom Emacs config)
 
 ## Features
+ - Company for autocompletion
  - Vertico popup menu for M-x and searches
  - Treesitter and lsp settings for better code editing
  - Personal tweaks to make doom more usable
@@ -39,5 +40,23 @@ In vterm.el you can set the shell to
 ```
 (setq vterm-shell "/bin/zsh") ;; replace with your shell
 ```
+
+### Installing treesitter for language
+
+1. M-x install-treesitter-language-grammar
+2. Install. If not there, then add the grammar url to treesitter.el
+```
+(setq treesit-language-source-alist
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (language-name github-repo master-branch-name src-location)
+...
+))
+```
+
+### Clojure notes
+
+- Do not enable +lsp for clojure, this does not include dot completion for java objects. Instead use cider for auto completion.
+- Use 'cider-jack-in' for project
+
 
 ![Logo](slogo.png)
