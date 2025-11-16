@@ -75,3 +75,5 @@
 ;;(use-package gdscript-mode
 ;;  :mode "\\.gd\\'"
 ;;  :hook (gdscript-mode . eglot-ensure))
+
+(package! aider)

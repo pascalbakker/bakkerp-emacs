@@ -83,3 +83,22 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀
 ```
 
+
+## Notes
+
+### Aider LLM setup
+
+1. Create a file data/llm.el 
+2. Create this file
+
+```
+(defvar anthropic-api-key "[ANTHROPIC_KEY]")
+```
+
+### Setting default vterm shell
+
+In vterm.el you can set the shell to
+
+```
+(setq vterm-shell "/bin/zsh") ;; replace with your shell
+```

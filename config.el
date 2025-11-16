@@ -10,8 +10,6 @@
  "fullscreen.el"                        ; allows full screen mode
  "center_text.el"                       ; allows buffer to center text
  "logo.el"                              ; dashboard settings
- ;; "emms.el"                              ; media player settings
- ;; "emojify.el"                           ; lazy load emojis
  "vterm.el"                             ; terminal emulator settings
  "epub.el"                              ; epub reader settings
  "org.el"                               ; org mode settings
@@ -26,8 +24,12 @@
  "buffers.el"                           ; scripts for buffer management
  "scripts.el"                           ; run bash scripts functions
  "dap.el"                               ; DAP configs
- ;; "centaur.el"
  "hotkeys.el"                           ; hotkeys for all scripts and doom
+ "company.el"                           ; autcompletion config
+ "aider.el"                             ; AI vibe coding 
+ ;; "centaur.el"
+ ;; "emms.el"                              ; media player settings
+ ;; "emojify.el"                           ; lazy load emojis
  )
 
 ;; At the very top of ~/.doom.d/init.el

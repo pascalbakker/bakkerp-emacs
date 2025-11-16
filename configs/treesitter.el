@@ -16,4 +16,11 @@
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-        (rust "https://github.com/tree-sitter/tree-sitter-rust" "master" "src")))
+        (rust "https://github.com/tree-sitter/tree-sitter-rust" "master" "src")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "master" "src")
+        (php "https://github.com/tree-sitter/tree-sitter-php" "master" "src")
+        (clojure "https://github.com/sogaiu/tree-sitter-clojure" "master" "src")
+        (c "https://github.com/tree-sitter/tree-sitter-c" "master" "src")
+        ))
+
+(setq treesit-font-lock-level 2)
