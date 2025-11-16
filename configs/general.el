@@ -6,7 +6,13 @@
 
 (setq org-directory "~/org/")
 
-(setq doom-theme 'doom-one)
+;; Use wombat theme
+(load-theme 'doom-one t)  
+
+;; a great font: https://www.fontyukle.net/en/Monaco.ttf
+(condition-case nil
+    (set-default-font "Monaco")
+  (error nil))
 
 ;;(add-to-list 'default-frame-alist '(font . "JetBrains Mono-13"))
 ;;(set-face-attribute 'default nil :family "JetBrains Mono" :height 130)
